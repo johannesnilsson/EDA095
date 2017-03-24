@@ -31,7 +31,7 @@ public class PDFDownloader {
 		downloadPDFs(urlsToDownload);
 
 	}
-
+ 
 	private static ArrayList<URL> parseHTMLforPDF(String target) {
 		String dataHTML = "";
 
