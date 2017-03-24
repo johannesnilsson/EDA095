@@ -20,6 +20,9 @@ public class PDFDownloader {
 		// Get the web-address from user
 		Scanner scan = new Scanner(System.in);
 		String target = scan.nextLine();
+		
+		System.out.println("Enter dir to save PDF's: ");
+		String dir = scan.nextLine();
 		scan.close();
 
 		// Parse all the PDF links from the web-address
@@ -28,7 +31,7 @@ public class PDFDownloader {
 		System.out.println("Found " + urlsToDownload.size() + " PDF's to download.");
 
 		// Download all the pdfs
-		downloadPDFs(urlsToDownload);
+		downloadPDFs(urlsToDownload, dir);
 
 	}
  
@@ -97,14 +100,14 @@ public class PDFDownloader {
 		return protocol + "://" + host + "/";
 	}
 
-	private static void downloadPDFs(ArrayList<URL> pdfsToDownload) {
+	private static void downloadPDFs(ArrayList<URL> pdfsToDownload, String dir) {
 		for (URL url : pdfsToDownload) {
 
 			int index = pdfsToDownload.indexOf(url);
 			int size = pdfsToDownload.size();
 			System.out.print("Downloading... " + Math.round(((double) index / size * 100)) + " %\r");
 
-			String path = "/home/kung/LOL/" + url.getFile().substring(url.getFile().lastIndexOf('/'));
+			String path = dir + url.getFile().substring(url.getFile().lastIndexOf('/'));
 
 			try (BufferedInputStream is = new BufferedInputStream(url.openStream());
 					OutputStream os = new FileOutputStream(path)) {
