@@ -14,11 +14,7 @@ public class Runner implements Runnable {
 		this.url = url;
 	}
 
-	// @Override
-	// public void execute(Runnable command) {
 	public void run() {
-
-		System.out.println("RUNNING 12313 HERE");
 
 		// Download the file
 		String path = "DownloadedFile/" + url.getFile().substring(url.getFile().lastIndexOf('/'));
