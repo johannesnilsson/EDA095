@@ -19,7 +19,7 @@ public class Runner implements Runnable {
 	public void run() {
 		// myNumber++;
 		while (downloader.hasFilesToDownload()) {
-			System.out.println("thread myNumber is:" + myNumber);
+		//	System.out.println("thread myNumber is:" + myNumber);
 			URL fileToGet = downloader.getNextFileToDownload();
 
 			// Download the file
@@ -38,7 +38,7 @@ public class Runner implements Runnable {
 
 		}
 
-		System.out.println("thread myNumber is:" + myNumber + "AND I DIED NOW WITH");
+		//System.out.println("thread myNumber is:" + myNumber + "AND I DIED NOW WITH");
 
 	}
 }
