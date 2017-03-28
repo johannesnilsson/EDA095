@@ -14,78 +14,46 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PDFDownloader {
-	
-	private static int nbrOfDownloads = 0;
-	private static ArrayList<URL> urlsToDownload;
 
-	public synchronized static URL getNextFileToDownload(){
-		
-		if(nbrOfDownloads == urlsToDownload.size()){
+	private int nbrOfDownloads = 0;
+	private ArrayList<URL> urlsToDownload;
+
+	public PDFDownloader(String link) {
+		urlsToDownload = new ArrayList<URL>();
+		parseHTMLforPDF(link, urlsToDownload);
+	}
+
+	public synchronized URL getNextFileToDownload() {
+
+		if (nbrOfDownloads == urlsToDownload.size()) {
 			return null;
-		} else{
-			//nbrOfDownloads++;
+		} else {
 			return urlsToDownload.get(nbrOfDownloads++);
-			
 		}
 	}
-	
-	public synchronized static boolean hasFilesToDownload(){
-		return (nbrOfDownloads < urlsToDownload.size());
-		
-	}
-	
-	public static void downloadOneFile(URL url){
-		
-		
 
+	public synchronized boolean hasFilesToDownload() {
+		return (nbrOfDownloads < urlsToDownload.size());
+	}
+
+	public void downloadOneFile(URL url) {
 
 		String path = "DownloadedFile/" + url.getFile().substring(url.getFile().lastIndexOf('/'));
 
-
-			try (BufferedInputStream is = new BufferedInputStream(url.openStream());
-					OutputStream os = new FileOutputStream(path)) {
-				byte[] buffer = new byte[2048];
-				int numberOfBytesRead;
-				while ((numberOfBytesRead = is.read(buffer)) != -1) {
-					os.write(buffer, 0, numberOfBytesRead);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+		try (BufferedInputStream is = new BufferedInputStream(url.openStream());
+				OutputStream os = new FileOutputStream(path)) {
+			byte[] buffer = new byte[2048];
+			int numberOfBytesRead;
+			while ((numberOfBytesRead = is.read(buffer)) != -1) {
+				os.write(buffer, 0, numberOfBytesRead);
 			}
-
-
-
-
-		
-	}
-	
-	public static void main(String[] args) throws IOException {
-		System.out.println("Enter a web-address which you want to Download PDF's from:");
-		// Get the web-address from user
-		Scanner scan = new Scanner(System.in);
-		String target = scan.nextLine();
-		
-		scan.close();
-
-		// Parse all the PDF links from the web-address
-		urlsToDownload = parseHTMLforPDF(target);
-		
-		System.out.println("Found " + urlsToDownload.size() + " PDF's to download.");
-
-		// Download all the pdfs
-	//	downloadPDFs(urlsToDownload, dir);
-		
-		//for(int i = 0; i < persons.length; i++) persons[i] = new Person(elevatorMonitor);
-	//	for(int j = 0; j < persons.length; j++) persons[j].start();	
-	
-		
-		
-		for(int i = 0; i < 5; i++){
-			(new Runner(i)).start();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
 	}
- 
-	private static ArrayList<URL> parseHTMLforPDF(String target) {
+
+	static void parseHTMLforPDF(String target, ArrayList<URL> URLs) {
 		String dataHTML = "";
 
 		String baseAddressHTML = parseWebAddress(target);
@@ -112,8 +80,6 @@ public class PDFDownloader {
 		Pattern myPattern = Pattern.compile(pattern);
 		Matcher matcher = myPattern.matcher(dataHTML);
 
-		ArrayList<URL> URLs = new ArrayList<URL>();
-
 		while (matcher.find()) {
 			for (int i = 1; i <= matcher.groupCount(); i++) {
 				String matchedString = matcher.group(1);
@@ -128,7 +94,6 @@ public class PDFDownloader {
 			}
 		}
 
-		return URLs;
 	}
 
 	private static String parseWebAddress(String target) {
@@ -138,43 +103,16 @@ public class PDFDownloader {
 
 		String protocol = "";
 		String host = "";
-		//String file = "";
+		// String file = "";
 
 		while (webMatcher.find()) {
 			for (int i = 1; i <= webMatcher.groupCount(); i++) {
 				protocol = webMatcher.group(1);
 				host = webMatcher.group(2);
-				//file = webMatcher.group(3);
+				// file = webMatcher.group(3);
 			}
 		}
 		return protocol + "://" + host + "/";
-	}
-
-	public static void downloadPDFs(ArrayList<URL> pdfsToDownload, String dir) {
-		for (URL url : pdfsToDownload) {
-
-			int index = pdfsToDownload.indexOf(url);
-			int size = pdfsToDownload.size();
-			System.out.print("Downloading... " + Math.round(((double) index / size * 100)) + " %\r");
-
-			String path = dir + url.getFile().substring(url.getFile().lastIndexOf('/'));
-
-			try (BufferedInputStream is = new BufferedInputStream(url.openStream());
-					OutputStream os = new FileOutputStream(path)) {
-				byte[] buffer = new byte[2048];
-				int numberOfBytesRead;
-				while ((numberOfBytesRead = is.read(buffer)) != -1) {
-					os.write(buffer, 0, numberOfBytesRead);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			if (index == size - 1) {
-				System.out.print("Downloading... 100 %");
-			}
-
-		}
 	}
 
 }
