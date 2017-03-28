@@ -1,4 +1,4 @@
-package Threads;
+package runnable;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package Threads;
+package runnable;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 
-public class Runner extends Thread {
+public class Runner implements Runnable {
 
 	private int myNumber;
 	private PDFDownloader downloader;
