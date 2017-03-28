@@ -22,10 +22,10 @@ public class Main {
 		PDFDownloader downloader = new PDFDownloader(target);
 		ArrayList<URL> urls = downloader.getUrls();
 
-		// Create pool of Threads with the size equal to url amount
-		ExecutorService executorService = Executors.newFixedThreadPool(urls.size());
+		// Create pool of Threads with size 10
+		ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-		// For each URL "create new" thread.
+		// For each URL "create new" thread. So we submit url.size() amount
 		for (int i = 0; i < urls.size(); i++) {
 			executorService.submit(new Runner(urls.get(i)));
 		}
