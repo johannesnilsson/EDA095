@@ -1,15 +1,18 @@
+package tcp1;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 
-public class ServerMain {
+public class EchoServerTCP1 {
 
 	public static void main(String[] args) {
-		try {
-			ServerSocket sSocket = new ServerSocket(3000);
+		try (ServerSocket sSocket = new ServerSocket(3000)) {
 
 			while (true) {
 				System.out.println("Waiting for connection...");
@@ -22,21 +25,13 @@ public class ServerMain {
 				InputStream is = s.getInputStream();
 				OutputStream os = s.getOutputStream();
 
-				String str = "";
-				byte[] temp = new byte[1000];
-				while (is.read(temp) != -1) {
+				InputStreamReader is2 = new InputStreamReader(is);
+				BufferedReader bf = new BufferedReader(is2);
 
-					// convert byte to string
-					str = new String(temp, StandardCharsets.UTF_8);
-
-					// print the string to screen
-					System.out.println(str);
-
-					// write to output socket
-					os.write(str.getBytes());
-
-					// create new byte to "delete" old data.
-					temp = new byte[1000];
+				String data = "";
+				while ((data = bf.readLine()) != null) {
+					os.write((data + "\n\r").getBytes());
+					System.out.println(data);
 				}
 
 				// close the socket connection
@@ -44,10 +39,14 @@ public class ServerMain {
 				System.out.println("Connection closed...");
 
 			}
+		} catch (SocketException t) {
+			System.out.println("Error with connection: Broken socket on client side.");
+
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
+
 	}
 
 }
