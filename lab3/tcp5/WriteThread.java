@@ -1,5 +1,6 @@
 package tcp5;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -7,7 +8,6 @@ import java.util.Scanner;
 
 public class WriteThread implements Runnable {
 	private Socket s;
-	private String sep;
 
 	public WriteThread(Socket s) {
 		this.s = s;
@@ -15,21 +15,31 @@ public class WriteThread implements Runnable {
 
 	@Override
 	public void run() {
+		Scanner myScanner = null;
+		myScanner = new Scanner(System.in);
 
-		//try (PrintWriter myPW = new PrintWriter(s.getOutputStream())) {
-		try (OutputStream os = s.getOutputStream()) {
-			
-				Scanner myScanner = new Scanner(System.in);
+		while (true) {
+
+			try {
+				OutputStream os = s.getOutputStream();
+
 				String input;
-				System.out.println("Mannen: ");
 				input = myScanner.nextLine();
-				System.out.println("Mannen: " + input);
-				os.write(input.getBytes());
-			
-		}catch (Exception e) {
+				if (input.toLowerCase().equals("q:")) {
+					System.out.println("Exiting program");
+					break;
 
+				}
+				// System.out.println(input);
+				os.write((input + " \r\n").getBytes());
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-
+		// Shutdown properly
+		myScanner.close();
+		System.exit(1);
 	}
 
 }

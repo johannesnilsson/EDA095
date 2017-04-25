@@ -16,20 +16,20 @@ public class ReadThread implements Runnable{
 	@Override
 	public void run() {
 	
-//			try {
-//				InputStreamReader is = new InputStreamReader(s.getInputStream());
-//				BufferedReader bf = new BufferedReader(is);
-//				
-//				String temp ="";
-//				while((temp = bf.readLine()) != null){
-//					System.out.println(temp);
-//				}
-//				//s.close();
-//				
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+			try {
+				InputStreamReader is = new InputStreamReader(s.getInputStream());
+				BufferedReader bf = new BufferedReader(is);
+				
+				String temp ="";
+				while((temp = bf.readLine()) != null){
+					System.out.println(temp);
+				}
+				//s.close();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		
 		
