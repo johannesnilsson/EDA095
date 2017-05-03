@@ -16,6 +16,9 @@ public class Spider {
 	}
 
 	public synchronized boolean done() {
+		if(traversedURL.size() % 100 == 0){
+			System.out.println("Traveresed " + traversedURL.size() + " out of " + MAX_ITERATIONS + " urls.");
+		}
 		return traversedURL.size() > MAX_ITERATIONS;
 	}
 
