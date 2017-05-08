@@ -1,0 +1,18 @@
+<div class="container well">
+  <h1>Things to do</h1>
+</div>
+
+<table class="table table-stripped">
+<thead>
+<tr>
+<th> ToDo </th>
+<th> Done? </th>
+</tr>
+</thead>
+<tr *ngFor="let item of myList">
+<td> {{item.text}} </td>
+<td *ngIf="item.done; else elseBlock"><span class="glyphicon glyphicon-check" aria-hidden="true"></span></td>
+</tr>
+</table>
+
+<ng-template #elseBlock><span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span></ng-template>
