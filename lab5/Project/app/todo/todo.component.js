@@ -10,14 +10,24 @@
     }) 
   ]; 
 
-  function TodoComponent() { 
-  }; 
+  function TodoComponent(dataService) { 
+  this.todo = {
+  	text: '',
+  	done: false
+  };
+  
+  this.newTodo = function() {
+  	dataService.addTodo(this.todo);
+  	console.log("hej");
 
+  };
+
+  }; 
+  
   function newTodo() {
   };
 
   
-newTodo();
 
 })(window.app = window.app || {});
 
