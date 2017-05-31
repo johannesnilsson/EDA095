@@ -40,8 +40,8 @@ Applikationer behöver ett medium för att kunna överföra data mellan varandra
 
 ### Portar
 
-1-1023 - Är reserverade för standardtjänster.
-1024-65535 - Är tillängliga för applikationer att använda.
+- 1-1023 - Är reserverade för standardtjänster.
+- 1024-65535 - Är tillängliga för applikationer att använda.
 
 ### RFC (Request for comments)
 
@@ -57,9 +57,9 @@ Exempel på att läsa in 10 bytes från en inputStream:
 
     byte[] input = new byte[10];
     for(int i =0; i < input.length(); i++){
-    int b = in.read();
-    if(b == -1) break;
-    input[i] = (byte) b;
+        int b = in.read();
+        if(b == -1) break;
+        input[i] = (byte) b;
     }
     
 Att läsa in endast en byte i taget är ineffektivt, man brukar istället läsa in flera bytes genom att specifiera som tidigare ett byte objekt som fylls utav read funktionen, read() returnerar hur många bytes som faktiskt skrevs till byte vektorn.
@@ -68,7 +68,7 @@ Att läsa in endast en byte i taget är ineffektivt, man brukar istället läsa 
     byte[] inputData = new byte[1024];
     int dataRead = 0;
     while(dataRead != -1 && dataRead < 100){
-    dataRead = read(inputData,dataRead,inputData.length() - dataRead);
+        dataRead = read(inputData,dataRead,inputData.length() - dataRead);
     }
     
 read() returnerar -1 om det ite finns något mer att skicka.
@@ -93,7 +93,7 @@ Dessa används när man vill ha en teckenström istället för en byte ström so
     char[] characters = new char[1024];
     int dataRead = 0;
     while(dataRead != -1 && dataRead < 100){
-    dataRead = reader.read(characters,dataRead, characters.length - dataRead);
+        dataRead = reader.read(characters,dataRead, characters.length - dataRead);
     }
     
 ### Sockets
@@ -205,7 +205,7 @@ Exempel:
     // Thread class
     public class myCallable implements Callable<String>{
          public String call(){
-         return "hejsan";
+            return "hejsan";
         }
     }
     
