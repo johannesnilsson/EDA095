@@ -9,7 +9,7 @@
 
 ### Vad tillkom i java.nio paketet?
 
-När java.nio tillkom så förändrades modellen för hur man läser/skriver till en socket en del. Det som förändrades var att man med det nya paketet kunde använda sig av buffertar (**InputBufferStream, OutputBufferStream**) jämför med (**InputStream, OutputStream**). Vid sändning av data så fyller man data i en buffert innan man skickar iväg datan, vid mottagning så begär man att fylla en buffert som man sedan läser ifrån. 
+När java.nio tillkom så förändrades modellen för hur man läser/skriver till en socket en del. Det som förändrades var att man med det nya paketet kunde använda sig av buffertar (**BufferedInputStream, BufferedOutputStream**) jämför med (**InputStream, OutputStream**). Vid sändning av data så fyller man data i en buffert innan man skickar iväg datan, vid mottagning så begär man att fylla en buffert som man sedan läser ifrån. 
 
 ***Sidenote:*** *Anvädning av buffertar är mer effektivt, tänk ett exempel där man ska skicka iväg 100 byte av data. Om man skickar en byte i taget där man måste lägga till (e.g. 40 bytes) header data vilket motsvarar 41 bytes för varje byte av data 41 bytes * 100 = 4100 bytes. Om man istället buffrar 100 byte av data och sedan skickar iväg dom kommer man istället skicka 140 byte data.*
 
