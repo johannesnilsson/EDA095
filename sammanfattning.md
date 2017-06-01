@@ -140,9 +140,12 @@ Att läsa in endast en byte i taget är ineffektivt, man brukar istället läsa 
 
     //read 100 bytes
     byte[] inputData = new byte[1024];
-    int dataRead = 0;
-    while(dataRead != -1 && dataRead < 100){
-        dataRead = read(inputData,dataRead,inputData.length() - dataRead);
+    int bytesRead = 0;
+    int bytesToRead = 0;
+    while(bytesRead < bytesToRead){
+        int result = read(inputData,dataRead,inputData.length() - dataRead);
+        if(result == -1) break;
+        dataRead += result;
     }
     
 read() returnerar -1 om det inte finns mer data att hämta.
@@ -157,7 +160,15 @@ Exempel på hur man skapar en subbklass av dessa streams:
     // Adds functionality to inputstream.
     BufferedInputStream bis = new BufferedInputStream(is);
     
-Glöm ej att använda flush() vid anvädning av buffered streams, detta pga att buffrar kan fastna i ett läge där de väntar på att bli fulla innan de skickar iväg data. För att garantera att data faktiskt skickas så anropar man flush().
+    OutputStream os = ...;
+    // Adds functionality to inputstream.
+    BufferedOutputStream bos = new BufferedOutputStream(is);
+    
+Glöm ej att använda flush() vid anvädning av BufferedOutputStream, detta pga att buffrar kan fastna i ett läge där de väntar på att bli fulla innan data skickas iväg. För att garantera att data faktiskt skickas så anropar man flush() efter write().
+    
+    // using flush
+    bos.write(data);
+    bos.flush();
 
 
 #### Reader / Writers
@@ -180,6 +191,14 @@ Exempel på inläsning av 100 bytes med InputStreamReader
         dataRead = reader.is(characters,dataRead, characters.length - dataRead);
     }
     
+Exempel på inläsning av en rad med BuffereReader
+
+    // Create bufferedReader
+    Socket s = new Socket(ip,port);
+    InputStream is = s.getInputStream();
+    Reader r = new InputStreamReader(is);
+    String oneLine = r.getLine();
+    
 ### Sockets
 
 Sockets möjliggör anslutning mellan klient och program. 
@@ -188,7 +207,7 @@ Via sockets kan man ansluta input / outputstreams med varandra för inläsning a
 
 InputStream på klienten motsvarar OutputStream hos servern och vice versa.
 
-##### VIKTIGT 
+#### VIKTIGT 
 Glöm ej att stänga öppna sockets.
 
 ### Unicast / Multicast
@@ -212,7 +231,7 @@ Addresser som används för multicast är 224.0.0.0/4, dvs det är de första fy
 
 #### TTL (Time To Live)
 
-Detta är ett headerfält i IP-datagrammen som meddelar hur många routrar ett IP paket får besöka innan det når mottagaren. Om antalet router-hop överstiger TTL fältet innan paketet kommit fram så "dör" paketet, dvs den skickas inte vidare.
+Detta är ett headerfält i IP-datagrammen som meddelar hur många routrar ett IP paket får besöka innan det når mottagaren. Om antalet router-hop överstiger TTL fältet innan paketet kommit fram så "dör" paketet, dvs den skickas inte vidare. Detta används till att minska nätverkstrafik.
 
 ### Java server pages
 
@@ -221,7 +240,7 @@ Detta är ett headerfält i IP-datagrammen som meddelar hur många routrar ett I
 
 Beskrivning av processen som sker när en klient efterfrågar en .jsp fil från en server:
 
-**OBS**: Om det är första gången filen /Hello.jps efterfrågas så sker processen 1-5, annars hoppar man över steg 2,3,4.
+**OBS**: Om det är första gången filen /Hello.jps efterfrågas så sker processen 1-5, annars hoppar man över steg 2 och 3.
 1. Klienten skickar GET /Hello.jsp
 2. Servern läser in filen Hello.jsp
 3. Servern kompilerar en Servlet från .jsp filen, HelloServlet.java och exekverar denna.
@@ -236,10 +255,10 @@ Det finns två stycken html parsing kit som nämnts i kursen:
 
 #### HTMLEditorkit:
 - **Advantage:**  Is a part of java, so its a standard library.
-- **Disadvantage:** Has limited parsing capabilities.
+- **Disadvantage:** Has limited parsing capabilities, has limited or no documentation available.
 
 #### Jsoup:
-- **Advantage:**  Is easy to use and has high parsing capabilities.
+- **Advantage:**  Is easy to use and has high parsing capabilities, is well-documented.
 - **Disadvantage:** Is an external library which has to be imported.
 
 #### HTML
@@ -279,17 +298,19 @@ UDP anses som ett okopplat för att det inte finns en förbindelse mellan två k
 #### TCP 
 Har inbyggt stöd för felhantering och att segmenten kommer i rätt ordning.
 
-TCP anses som kopplat för att förbindelsen mellan två kommunikationsnoder är "fast", detta gör att man inte explicit måste angd destinationen för varje meddelande
+TCP anses som kopplat för att förbindelsen mellan två kommunikationsnoder är "fast", detta gör att man inte explicit måste ange destinationen för varje meddelande
 
 
 #### RTP
 
 Realtime transport protokoll - Stödjer mediaöverföring och bygger på UDP.
-Dock behövs det stöd från applikatosprogrammet för att hantera så att paket kommer i rätt ordning samt hantering av paket förluster.
+Dock behövs det stöd från applikatosprogrammet för att hantera så att paket kommer i rätt ordning,jitter samt hantering av paket förluster.
 
 #### HTTP
 
-Finns ett http protkoll som är baserat på TCP som är populärt.
+Finns ett http protkoll som är baserat på TCP som är populärt. 
+- DASH (Dynamic Adaptive Streaming over HTTP)
+- apple HTTP live Streaming
 
 ### java.nio
 
@@ -368,5 +389,5 @@ RTCP är en del av RTP protokollet och används för att förmedla statistik öv
 ### DASH (Dynamic Adaptive Streaming over HTTP)
 
 DASH är bra på att anpassa sig efter nätverket beroende på om man använder sig av Wi-Fi, mobilnät, fiber etc.
-Servern brukar ha flera olika versioner av median som ska överföras och kan därför dynamiskt anpassar sig till bandbredden och väljer version av median beroende på hur hög överföringshastigheten är.
+Servern brukar ha flera olika versioner av median som ska överföras och kan därför dynamiskt anpassa sig till bandbredden och väljer därefter version av media som beror på hur hög överföringshastigheten är.
 
