@@ -23,6 +23,24 @@ Servern svarar genom att utföra specifik operation.
 Applikationer behöver ett medium för att kunna överföra data mellan varandra.
 - H2H (Host to Host) - Omvandlar analoga och digitala signaler.
 
+### Transportlagret
+
+Tänk på att TCP och UDP ligger på transportlagret och det är transportlagret som ser till så att vi kan skicka bytes mellan två olika noder. Transportlagret ser till så att data skickas till rätt applikation genom att hantera data till rätt port, det är sedan applikationslagret som vet hur data som kommer faktiskt skall hanteras.
+
+## URL Connections / Sockets
+
+Dessa två kan ses som väldigt lika, båda erbjuder input/output strömmar. Nedan beskrivs anvädningsområden.
+
+### URL Connections
+
+Om vi t.ex. vill ansluta till en hemsida och därefter hämta data så som headers eller specifika fält.
+Då används URL connections där vi skapar en URL anslutning och sedan finns tillängliga metoder för att enkelt hämta t.e.x header från sidan.
+
+### Sockets
+
+Används då vi t.ex. vill skapa en förbinedelse mellan en klient och server där vi själva defenierar ett protokoll.
+Vi skapar en Socket på client sidan, ServerSocket på serversidan och sedan sker kommunikation via Input respektive OutputStreams.
+
 ### UDP (User Datagram Protokoll)
 
 - Upp till 65507 byte stora datagram.
