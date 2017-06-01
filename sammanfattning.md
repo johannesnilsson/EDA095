@@ -52,10 +52,21 @@ då används URL connections där vi skapar en URL anslutning.  Sedan finns det 
 
 ### Sockets
 
-Används då vi t.ex. vill skapa en förbinedelse mellan en klient och server där vi själva definierar ett protokoll.
+Används då vi t.ex. vill skapa en förbindelse mellan en klient och server där vi själva definierar ett protokoll.
 Vi skapar en Socket på client sidan och en ServerSocket på serversidan där kommunikation sker via Input respektive OutputStreams.
 
-### UDP (User Datagram Protokoll)
+Skapa en Client Socket:
+    
+    Socket s = new Socket("ip address", "port");
+    
+Skapa en Server Socket:
+
+    ServerSocket s = new ServerSocket("port");
+    
+***Kom ihåg***
+- Tumregeln är att använda port 1337 :) (1-1023) är reserverade för standarprotokoll.
+
+### UDP (User Datagram Protocol)
 
 - Upp till 65507 byte stora datagram.
 - UDP Garanterar korrekta meddelanden.
@@ -64,7 +75,7 @@ Vi skapar en Socket på client sidan och en ServerSocket på serversidan där ko
 
 ### TCP (Transmission Control Protocol)
 
-- Är en fast uppkoppling över nätet,
+- Är en fast uppkoppling över nätet.
 - Data skickas via strömmar -> Data behöver ej delas upp i paket.
 - TCP sköter automatisk felkontroll/omsändning.
 - TCP Garanterar leverans av meddelande.
@@ -108,7 +119,7 @@ read() returnerar -1 om det inte finns mer data att hämta.
 Villkoret dataRead < 100 är till för att begränsa inläsning av data till 100 bytes.
 
 #### InputStream och OutputStream
-Dessa två är högst i kedjan där varje subklass till dessa bidrar till mer funktionalitet. T.e.x så har vi BufferedInputStream som bidrar till bättre prestanda vid inläsning av från fil för att vi kan buffrra data.
+Dessa två är högst i kedjan där varje subklass till dessa bidrar till mer funktionalitet. T.ex. så har vi BufferedInputStream som bidrar till bättre prestanda vid inläsning från fil för att vi kan buffra data.
 
 Exempel på hur man skapar en subbklass av dessa streams:
 
@@ -122,7 +133,7 @@ Glöm ej att använda flush() vid anvädning av buffered streams, detta pga att 
 #### Reader / Writers
 
 Dessa används när man vill ha en teckenström istället för en byte ström som i vanliga streams. 
-T.e.x så har vi InputStreamReader som returnerar en karaktär istället för en byte om man anropar på reader() funktionen.
+T.ex. så har vi InputStreamReader som returnerar en karaktär istället för en byte om man anropar på reader() funktionen.
 
     // Create InputStreamReader
     Socket s = new Socket(ip,port);
