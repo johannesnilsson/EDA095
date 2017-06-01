@@ -17,6 +17,31 @@ När java.nio tillkom så förändrades modellen för hur man läser/skriver til
 
 **Selector:** Ett objekt av klassen selector används för att kunna registrera specifika förbindelser som man vill bevaka. När man anropar **select** på objektet så blockeras den körande tråden fram till att någon utav de förbinelserna man bevakar är tillängliga för I/O operationer.
 
+### Mutual Exclusion
+
+Mutual Exclusion innebär att endast en tråd åt gången kan befinna sig i en och samma **kritiska region**. Dvs det går ej att ha två trådar exekverandes i samma region vilket manipulerar data samtidigt, om en tråd är inne i den kritiska regionen så får den andra tråden vänta till att den första blir klar med sin exekvering och lämnar regionen.
+
+### Busy-wait
+
+Busy wait är när en tråd ligger och upprepandes testar ett villkor i en loop vilket tar processor tid som kunde användas åt andra trådar. 
+
+    while(ItsNotMyTurn){
+    // Kör denna loop fram tills att det blir min tur.
+    }
+    
+Detta kan man lösa genom att använda sig utav wait() och notify(). Man har ofta ett monitor objekt där tråden anropar en metod på som är blockerande fram till att villkoret är uppfyllt.
+
+    // Tråden anropar
+    monitor.IsItMyTurn(); // blockerande anrop
+    
+    // Metod inne i monitorn
+    public sunchronized void IsItMyTurn(){
+    while(itsNotHisTurn()){
+        try{ wait();
+        } catch(...){
+        }
+    }
+
 ### Protokoll:
 
 För att två program som kommunicerar över ett nätverk ska kunna förstå varandras meddelanden så behövs det ett gemensamt protokoll, man kan se detta som ett gemensamt (fördefinerat) språk.
