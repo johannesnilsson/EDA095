@@ -4,6 +4,19 @@
 
 # Nätverksprogrammering sammanfattning
 
+
+## Mönster av teorin som kommer på del 1:
+
+### Vad tillkom i java.nio paketet?
+
+När java.nio tillkom så förändrades modellen för hur man läser/skriver till en socket en del. Det som förändrades var att man med det nya paketet kunde använda sig av buffertar (**InputBufferStream, OutputBufferStream**) jämför med (**InputStream, OutputStream**). Vid sändning av data så fyller man data i en buffert innan man skickar iväg datan, vid mottagning så begär man att fylla en buffert som man sedan läser ifrån. 
+
+***Sidenote:*** *Anvädning av buffertar är mer effektivt, tänk ett exempel där man ska skicka iväg 100 byte av data. Om man skickar en byte i taget där man måste lägga till (e.g. 40 bytes) header data vilket motsvarar 41 bytes för varje byte av data 41 bytes * 100 = 4100 bytes. Om man istället buffrar 100 byte av data och sedan skickar iväg dom kommer man istället skicka 140 byte data.*
+
+**Fördelar**: En betydande fördel med att använda den nya paketet är att med *.nio* så kan en enda singel tråd hantera flera förbindelser (strömmar).
+
+**Selector:** Ett objekt av klassen selector används för att kunna registrera specifika förbindelser som man vill bevaka. När man anropar **select** på objektet så blockeras den körande tråden fram till att någon utav de förbinelserna man bevakar är tillängliga för I/O operationer.
+
 ### Protokoll:
 
 För att två program som kommunicerar över ett nätverk ska kunna förstå varandras meddelanden så behövs det ett gemensamt protokoll, man kan se detta som ett gemensamt (fördefinerat) språk.
@@ -25,21 +38,22 @@ Applikationer behöver ett medium för att kunna överföra data mellan varandra
 
 ### Transportlagret
 
-Tänk på att TCP och UDP ligger på transportlagret och det är transportlagret som ser till så att vi kan skicka bytes mellan två olika noder. Transportlagret ser till så att data skickas till rätt applikation genom att hantera data till rätt port, det är sedan applikationslagret som vet hur data som kommer faktiskt skall hanteras.
+Tänk på att TCP och UDP ligger på transportlagret och det är transportlagret som ser till så att vi kan skicka bytes mellan två olika noder. Transportlagret ser till att data (i form av bytes) skickas till rätt applikation genom att hantera data till rätt port. Transportlagret gör ingen tolkning av datan utan det är sedan applikationslagret som vet hur datan faktiskt skall hanteras.
 
 ## URL Connections / Sockets
 
-Dessa två kan ses som väldigt lika, båda erbjuder input/output strömmar. Nedan beskrivs anvädningsområden.
+Dessa två kan ses som väldigt lika, båda erbjuder Input/Output strömmar. 
+Nedan beskrivs användningsområden.
 
 ### URL Connections
 
-Om vi t.ex. vill ansluta till en hemsida och därefter hämta data så som headers eller specifika fält.
-Då används URL connections där vi skapar en URL anslutning och sedan finns tillängliga metoder för att enkelt hämta t.e.x header från sidan.
+Om vi t.ex. vill ansluta till en hemsida och därefter hämta data så som headers eller specifika fält,
+då används URL connections där vi skapar en URL anslutning.  Sedan finns det metoder tillängliga för att enkelt hämta t.ex. sidans header.
 
 ### Sockets
 
-Används då vi t.ex. vill skapa en förbinedelse mellan en klient och server där vi själva defenierar ett protokoll.
-Vi skapar en Socket på client sidan, ServerSocket på serversidan och sedan sker kommunikation via Input respektive OutputStreams.
+Används då vi t.ex. vill skapa en förbinedelse mellan en klient och server där vi själva definierar ett protokoll.
+Vi skapar en Socket på client sidan och en ServerSocket på serversidan där kommunikation sker via Input respektive OutputStreams.
 
 ### UDP (User Datagram Protokoll)
 
@@ -152,6 +166,8 @@ Här används ett meddelande för att nå ut till flera mottagare, detta görs v
 
 Tänk exemplet tidigare, om routern stödjer multicast så hade servern skickat ett datagram till routern som sedan hade vidarebefodrat samma datagram till alla på nätverket som faktiskt streamar.
 
+Addresser som används för multicast är 224.0.0.0/4, dvs det är de första fyra bitarna som är reserverade och därmed kan en multicast adress utsträcka sig mellan (224.0.0.0 - 239.255.255.255).
+
 
 #### TTL (Time To Live)
 
@@ -243,7 +259,7 @@ Dessa möjliggör det för t.ex. en server att endast ha en tråd för att bevak
 #### Selector:
 Denna klass används för att registrera ett antal sockets som man vill bevaka. Genom att anropa select() på objektet så kan man sedan blockera fram tills att det går att utföra någon typ av I/O operation på de bevakade uppkopplingarna.
     
-### Exectuors
+### Executors
 
 Exempel: Skapa en tråd pool med max antalet parallela trådar till (3), starta en given tråd klass som implementerar Runnable.
 
@@ -276,6 +292,15 @@ Exempel:
         }
     }
     
+### Streaming TCP/UDP/HTTP
+
+För att streama i realtid kan man använda sig utav antingen UDP eller TCP, UDP brukar vara snabbare men dock är det många brandväggar som blockerar UDP och därför är det det mindre vanligt.
+
+HTTP streaming är mycket vanligt då HTTP kommer förbi brandväggar.
+Exempel på HTTP streaming är: 
+- DASH
+- HTTPLiveStreaming
+    
 ### RTP (Realtime Transport Protocol)
 
 Är ett protokoll som är avsett för överföring av ljud och bild i realtid, dock garanterar protokollet inte realtidsöverföring. Protokollet är paketbaserat och innehåller indetifikation av:
@@ -297,4 +322,10 @@ RTCP är en del av RTP protokollet och används för att förmedla statistik öv
 ### RTSP (Realtime Streaming protokoll)
 
 Är ett HTTP liknande protokoll som används för att kunna kontrollera uppspelning av strömmande media likt en fjärkontroll, exempel: start, stop och pausa.
-    
+
+
+### DASH (Dynamic Adaptive Streaming over HTTP)
+
+DASH är bra på att anpassa sig efter nätverket beroende på om man använder sig av Wi-Fi, mobilnät, fiber etc.
+Servern brukar ha flera olika versioner av median som ska överföras och kan därför dynamiskt anpassar sig till bandbredden och väljer version av median beroende på hur hög överföringshastigheten är.
+
