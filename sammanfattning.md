@@ -152,6 +152,11 @@ Här används ett meddelande för att nå ut till flera mottagare, detta görs v
 
 Tänk exemplet tidigare, om routern stödjer multicast så hade servern skickat ett datagram till routern som sedan hade vidarebefodrat samma datagram till alla på nätverket som faktiskt streamar.
 
+
+#### TTL (Time To Live)
+
+Detta är ett headerfält i IP-datagrammen som meddelar hur många routrar ett IP paket får besöka innan det når mottagaren. Om antalet router-hop överstiger TTL fältet innan paketet kommit fram så "dör" paketet, dvs den skickas inte vidare.
+
 ### Java server pages
 
 - .jps filer är html filer med extra element inuti.
