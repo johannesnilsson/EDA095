@@ -29,17 +29,22 @@ Busy wait är när en tråd ligger och upprepandes testar ett villkor i en loop 
     // Kör denna loop fram tills att det blir min tur.
     }
     
-Detta kan man lösa genom att använda sig utav wait() och notify(). Man har ofta ett monitor objekt där tråden anropar en metod på som är blockerande fram till att villkoret är uppfyllt.
+Detta kan man lösa genom att använda sig utav wait() och notify(). Man har ofta ett monitor objekt där tråden anropar en metod på som är blockerande fram till att villkoret är uppfyllt, villkoret kan då ändras genom att t.ex. en annan tråd ändrar villkoret och anropar notifyAll();.
 
     // Tråden anropar
     monitor.IsItMyTurn(); // blockerande anrop
     
     // Metod inne i monitorn
     public sunchronized void IsItMyTurn(){
-    while(itsNotHisTurn()){
+    while(!hisTurn){
         try{ wait();
         } catch(...){
         }
+    }
+    // Annan tråd som ändrar villkoret och väcker tråden
+    public synchronized void changeTurn(){
+        hisTurn = true;
+        notifyAll();
     }
 
 ### Protokoll:
