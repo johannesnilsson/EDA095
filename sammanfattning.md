@@ -194,9 +194,9 @@ Beskrivning av processen som sker när en klient efterfrågar en .jsp fil från 
 **OBS**: Om det är första gången filen /Hello.jps efterfrågas så sker processen 1-5, annars hoppar man över steg 2,3,4.
 1. Klienten skickar GET /Hello.jsp
 2. Servern läser in filen Hello.jsp
-3. Genererar en Servlet, HelloServlet.java
-4. Kompilerar denna java kod till html kod.
-5. HTML returneras till klienten.
+3. Servern kompilerar en Servlet från .jsp filen, HelloServlet.java och exekverar denna.
+4. Servern anropar service() som skapar HTML kod från servlet.
+5. Denna HTML returneras till klienten.
 
 ### Parsing HTML
 
